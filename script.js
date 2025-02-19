@@ -143,10 +143,10 @@ const ageCategories = [
     { minAge: 0, maxAge: 24, gradeA: 250 },
     { minAge: 25, maxAge: 29, gradeA: 240 },
     { minAge: 30, maxAge: 34, gradeA: 230 },
-    { minAge: 35, maxAge: 39, gradeA: 220 },
-    { minAge: 40, maxAge: 44, gradeA: 210 },
-    { minAge: 45, maxAge: 49, gradeA: 200 },
-    { minAge: 50, maxAge: 100, gradeA: 190 }
+    { minAge: 35, maxAge: 39, gradeA: 210 },
+    { minAge: 40, maxAge: 44, gradeA: 200 },
+    { minAge: 45, maxAge: 49, gradeA: 180 },
+    { minAge: 50, maxAge: 100, gradeA: 170 }
 ];
 
 // Function to calculate scores
