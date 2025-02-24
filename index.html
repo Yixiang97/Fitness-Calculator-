@@ -44,22 +44,15 @@
             color: #f0f0f0;
             box-sizing: border-box;
         }
-        .points-display, #gradeDisplay, #suggestedRunTimeDisplay, #runPointsDisplay {
+        .points-display, #gradeDisplay, #suggestedRunTimeDisplay, #runPointsDisplay, #totalPointsDisplay, #pointsToGradeADisplay {
             margin-top: 5px;
             font-weight: bold;
-            color: #ffc107;
         }
-        #gradeDisplay {
-            color: #ff6f61;
-        }
-        #suggestedRunTimeDisplay {
-            color: #4caf50;
-            margin-top: 15px;
-            font-size: 1.1em;
-        }
-        #runPointsDisplay {
-            color: #42a5f5;
-        }
+        #gradeDisplay { color: #ff6f61; }
+        #suggestedRunTimeDisplay { color: #4caf50; margin-top: 15px; font-size: 1.1em; }
+        #runPointsDisplay { color: #42a5f5; }
+        #totalPointsDisplay { color: #ffeb3b; }
+        #pointsToGradeADisplay { color: #f06292; }
     </style>
 </head>
 <body>
@@ -85,12 +78,14 @@
             <input type="text" id="runtime" placeholder="e.g., 18.30">
             <div id="runPointsDisplay" class="points-display"></div>
             <div id="gradeDisplay"></div>
+            <div id="totalPointsDisplay" class="points-display"></div>
+            <div id="pointsToGradeADisplay" class="points-display"></div>
         </div>
-        <div id="suggestedRunTimeDisplay"></div>
+        <div id="suggestedRunTimeDisplay" class="points-display"></div>
     </div>
 
     <script>
-        const chinupScoring = {
+      const chinupScoring = {
     20: 100, 19: 95, 18: 90, 17: 85, 16: 80, 15: 75, 14: 70, 13: 65, 12: 60,
     11: 55, 10: 50, 9: 45, 8: 40, 7: 35, 6: 30, 5: 25, 4: 20, 3: 15, 2: 10, 1: 5, 0: 0
 };
@@ -238,7 +233,7 @@ const runScoring = [
     { maxTime: 23 * 60 + 48, score: 2 },
     { maxTime: 23 * 60 + 54, score: 1 },
 ];
-      document.querySelectorAll("input").forEach(input => input.addEventListener("input", updateAll));
+        document.querySelectorAll("input").forEach(input => input.addEventListener("input", updateAll));
 
         function updateAll() {
             const age = +document.getElementById("age").value;
@@ -249,8 +244,8 @@ const runScoring = [
             updateAgeCategory(age);
             updateChinupPoints(chinups);
             updateSitupPoints(situps);
-            showSuggestedRunTime(age, chinups, situps);
             updateRunGrade(age, chinups, situps, runtime);
+            showSuggestedRunTime(age, chinups, situps);
         }
 
         function updateAgeCategory(age) {
@@ -267,20 +262,18 @@ const runScoring = [
             document.getElementById("situpPointsDisplay").textContent = situps >= 0 ? `Sit-up Points: ${situpScore}` : "";
         }
 
-     function showSuggestedRunTime(age, chinups, situps) {
+        function showSuggestedRunTime(age, chinups, situps) {
             const display = document.getElementById("suggestedRunTimeDisplay");
-            const totalPointsDisplay = document.getElementById("totalPointsDisplay");
             const pointsToGradeADisplay = document.getElementById("pointsToGradeADisplay");
-         
+
             const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
-            if (!category) return display.textContent = "";
+            if (!category) return display.textContent = pointsToGradeADisplay.textContent = "";
 
             const chinupScore = chinupScoring[chinups] ?? 0;
             const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
-            const totalScore = chinupScore + situpScore + runScoring;
-            const pointsToGradeA = category.gradeA - (chinupScore + situpScore);
-
-          totalPointsDisplay.textContent = `Total Points: ${totalScore}`;
+            const totalScoreWithoutRun = chinupScore + situpScore;
+            
+            const pointsToGradeA = Math.max(category.gradeA - totalScoreWithoutRun, 0);
             pointsToGradeADisplay.textContent = pointsToGradeA > 0 ? `Points needed for Grade A: ${pointsToGradeA}` : "🎉 Congratulations! You have achieved Grade A! 🎉";
 
             if (pointsToGradeA <= 0) {
@@ -288,10 +281,7 @@ const runScoring = [
                 return;
             }
 
-            const closestEntry = runScoring.reduce((closest, entry) =>
-                Math.abs(entry.score - pointsToGradeA) < Math.abs(closest.score - pointsToGradeA) ? entry : closest, runScoring[0]
-            );
-
+            const closestEntry = runScoring.find(entry => entry.score >= pointsToGradeA) || runScoring[runScoring.length - 1];
             const minutes = Math.floor(closestEntry.maxTime / 60);
             const seconds = String(closestEntry.maxTime % 60).padStart(2, "0");
             display.textContent = `Suggested Run Time: ${minutes}.${seconds}`;
@@ -300,20 +290,23 @@ const runScoring = [
         function updateRunGrade(age, chinups, situps, runtime) {
             const gradeDisplay = document.getElementById("gradeDisplay");
             const runPointsDisplay = document.getElementById("runPointsDisplay");
+            const totalPointsDisplay = document.getElementById("totalPointsDisplay");
 
-            if (!runtime.includes(".")) return gradeDisplay.textContent = runPointsDisplay.textContent = "";
+            if (!runtime.includes(".")) return gradeDisplay.textContent = runPointsDisplay.textContent = totalPointsDisplay.textContent = "";
 
             const [min, sec] = runtime.split(".").map(Number);
-            if (isNaN(min) || isNaN(sec)) return gradeDisplay.textContent = "Invalid time.";
+            if (isNaN(min) || isNaN(sec) || sec > 59) return gradeDisplay.textContent = "Invalid time format.";
 
             const runEntry = runScoring.find(entry => min * 60 + sec <= entry.maxTime) ?? { score: 0 };
-            runPointsDisplay.textContent = `Run Points: ${runEntry.score}`;
+            const runScore = runEntry.score;
+            runPointsDisplay.textContent = `Run Points: ${runScore}`;
 
             const chinupScore = chinupScoring[chinups] ?? 0;
             const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
-            const totalScore = chinupScore + situpScore + runEntry.score;
-            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
+            const totalScore = chinupScore + situpScore + runScore;
+            totalPointsDisplay.textContent = `Total Points (With Run): ${totalScore}`;
 
+            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
             if (!category) return gradeDisplay.textContent = "Grade: N/A";
 
             const grade = totalScore >= category.gradeA ? "A" : totalScore >= category.gradeB ? "B" : totalScore >= category.gradeC ? "C" : "Fail";
