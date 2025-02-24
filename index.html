@@ -280,7 +280,7 @@ const runScoring = [
 
             display.textContent = pointsNeeded <= 0 
                 ? "🎉 Chin-ups & Sit-ups alone reached Grade A! 🎉" 
-                : `Suggested Run Time (Based on Chin-ups & Sit-ups): ${getClosestRunTime(pointsNeeded)} | Points needed: ${pointsNeeded}`;
+                : `Suggested Run Time For Grade A (Based on Chin-ups & Sit-ups): ${getClosestRunTime(pointsNeeded)} | Points needed: ${pointsNeeded}`;
         }
 
         function updateRunGrade(age, chinups, situps, runtime) {
