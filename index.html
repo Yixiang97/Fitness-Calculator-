@@ -44,10 +44,7 @@
             color: #f0f0f0;
             box-sizing: border-box;
         }
-        .points-display {
-            margin-top: 5px;
-            font-weight: bold;
-        }
+        .points-display { margin-top: 5px; font-weight: bold; }
         #gradeDisplay { color: #ff6f61; }
         #suggestedRunTimeDisplay { color: #4caf50; font-size: 1.1em; }
         #runPointsDisplay { color: #42a5f5; }
@@ -73,6 +70,7 @@
             <input type="number" id="situps" placeholder="Enter sit-up reps">
             <div id="situpPointsDisplay" class="points-display"></div>
         </div>
+        <div id="suggestedRunTimeDisplay" class="points-display"></div>
         <div class="input-group">
             <label for="runtime">3.2km Run Time (MM.SS):</label>
             <input type="text" id="runtime" placeholder="e.g., 18.30">
@@ -81,11 +79,10 @@
             <div id="totalPointsDisplay" class="points-display"></div>
             <div id="differenceToGradeADisplay" class="points-display"></div>
         </div>
-        <div id="suggestedRunTimeDisplay" class="points-display"></div>
     </div>
 
     <script>
-       const chinupScoring = {
+         const chinupScoring = {
     20: 100, 19: 95, 18: 90, 17: 85, 16: 80, 15: 75, 14: 70, 13: 65, 12: 60,
     11: 55, 10: 50, 9: 45, 8: 40, 7: 35, 6: 30, 5: 25, 4: 20, 3: 15, 2: 10, 1: 5, 0: 0
 };
@@ -233,7 +230,6 @@ const runScoring = [
     { maxTime: 23 * 60 + 48, score: 2 },
     { maxTime: 23 * 60 + 54, score: 1 },
 ];
-
         document.querySelectorAll("input").forEach(input => input.addEventListener("input", updateAll));
 
         function updateAll() {
@@ -245,8 +241,18 @@ const runScoring = [
             updateAgeCategory(age);
             updateChinupPoints(chinups);
             updateSitupPoints(situps);
-            updateRunGrade(age, chinups, situps, runtime);
-            showSuggestedRunTime(age, chinups, situps);
+
+            if (!isNaN(chinups) && !isNaN(situps)) {
+                showSuggestedRunTime(age, chinups, situps);
+            } else {
+                document.getElementById("suggestedRunTimeDisplay").textContent = "";
+            }
+
+            if (runtime) {
+                updateRunGrade(age, chinups, situps, runtime);
+            } else {
+                clearRunRelatedDisplays();
+            }
         }
 
         function updateAgeCategory(age) {
@@ -272,7 +278,9 @@ const runScoring = [
             const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
             const pointsNeeded = category.gradeA - (chinupScore + situpScore);
 
-            display.textContent = pointsNeeded <= 0 ? "🎉 Chin-ups & Sit-ups alone reached Grade A! 🎉" : `Suggested Run Time (Based on Chin-ups & Sit-ups): ${getClosestRunTime(pointsNeeded)}`;
+            display.textContent = pointsNeeded <= 0 
+                ? "🎉 Chin-ups & Sit-ups alone reached Grade A! 🎉" 
+                : `Suggested Run Time (Based on Chin-ups & Sit-ups): ${getClosestRunTime(pointsNeeded)} | Points needed: ${pointsNeeded}`;
         }
 
         function updateRunGrade(age, chinups, situps, runtime) {
@@ -281,7 +289,7 @@ const runScoring = [
             const totalPointsDisplay = document.getElementById("totalPointsDisplay");
             const differenceToGradeADisplay = document.getElementById("differenceToGradeADisplay");
 
-            if (!runtime.includes(".")) return clearDisplays();
+            if (!runtime.includes(".")) return clearRunRelatedDisplays();
 
             const [min, sec] = runtime.split(".").map(Number);
             if (isNaN(min) || isNaN(sec) || sec > 59) return gradeDisplay.textContent = "Invalid time format.";
@@ -295,28 +303,28 @@ const runScoring = [
             if (!category) return gradeDisplay.textContent = "Grade: N/A";
 
             const pointsDifference = category.gradeA - totalScore;
+
             runPointsDisplay.textContent = `Run Points: ${runScore}`;
             totalPointsDisplay.textContent = `Total Points (With Run): ${totalScore}`;
-
-            if (pointsDifference > 0) {
-                differenceToGradeADisplay.textContent = `Points needed to reach Grade A: ${pointsDifference}`;
-            } else {
-                differenceToGradeADisplay.textContent = "🎉 Achieved Grade A with run! 🎉";
-            }
+            differenceToGradeADisplay.textContent = pointsDifference > 0 
+                ? `Points needed to reach Grade A: ${pointsDifference}` 
+                : "🎉 Achieved Grade A ! 🎉";
 
             const grade = totalScore >= category.gradeA ? "A" : totalScore >= category.gradeB ? "B" : totalScore >= category.gradeC ? "C" : "Fail";
             gradeDisplay.textContent = `Grade: ${grade}`;
         }
 
         function getClosestRunTime(pointsNeeded) {
-            const entry = runScoring.reduce((prev, curr) => Math.abs(curr.score - pointsNeeded) < Math.abs(prev.score - pointsNeeded) ? curr : prev);
+            const entry = runScoring.reduce((prev, curr) => 
+                Math.abs(curr.score - pointsNeeded) < Math.abs(prev.score - pointsNeeded) ? curr : prev);
             const minutes = Math.floor(entry.maxTime / 60);
             const seconds = String(entry.maxTime % 60).padStart(2, "0");
             return `${minutes}.${seconds}`;
         }
 
-        function clearDisplays() {
-            ["runPointsDisplay", "gradeDisplay", "totalPointsDisplay", "differenceToGradeADisplay"].forEach(id => document.getElementById(id).textContent = "");
+        function clearRunRelatedDisplays() {
+            ["runPointsDisplay", "gradeDisplay", "totalPointsDisplay", "differenceToGradeADisplay"]
+                .forEach(id => document.getElementById(id).textContent = "");
         }
     </script>
 </body>
