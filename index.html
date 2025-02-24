@@ -269,15 +269,22 @@ const runScoring = [
 
      function showSuggestedRunTime(age, chinups, situps) {
             const display = document.getElementById("suggestedRunTimeDisplay");
+            const totalPointsDisplay = document.getElementById("totalPointsDisplay");
+            const pointsToGradeADisplay = document.getElementById("pointsToGradeADisplay");
+         
             const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
             if (!category) return display.textContent = "";
 
             const chinupScore = chinupScoring[chinups] ?? 0;
             const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
+            const totalScore = chinupScore + situpScore + runScoring;
             const pointsToGradeA = category.gradeA - (chinupScore + situpScore);
 
+          totalPointsDisplay.textContent = `Total Points: ${totalScore}`;
+            pointsToGradeADisplay.textContent = pointsToGradeA > 0 ? `Points needed for Grade A: ${pointsToGradeA}` : "🎉 Congratulations! You have achieved Grade A! 🎉";
+
             if (pointsToGradeA <= 0) {
-                display.textContent = "🎉 Congratulations! You have achieved Grade A! 🎉";
+                display.textContent = "";
                 return;
             }
 
