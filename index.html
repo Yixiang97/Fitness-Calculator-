@@ -85,7 +85,7 @@
     </div>
 
     <script>
-      const chinupScoring = {
+        const chinupScoring = {
     20: 100, 19: 95, 18: 90, 17: 85, 16: 80, 15: 75, 14: 70, 13: 65, 12: 60,
     11: 55, 10: 50, 9: 45, 8: 40, 7: 35, 6: 30, 5: 25, 4: 20, 3: 15, 2: 10, 1: 5, 0: 0
 };
@@ -272,8 +272,8 @@ const runScoring = [
             const chinupScore = chinupScoring[chinups] ?? 0;
             const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
             const totalScoreWithoutRun = chinupScore + situpScore;
-            
             const pointsToGradeA = Math.max(category.gradeA - totalScoreWithoutRun, 0);
+
             pointsToGradeADisplay.textContent = pointsToGradeA > 0 ? `Points needed for Grade A: ${pointsToGradeA}` : "🎉 Congratulations! You have achieved Grade A! 🎉";
 
             if (pointsToGradeA <= 0) {
@@ -281,7 +281,10 @@ const runScoring = [
                 return;
             }
 
-            const closestEntry = runScoring.find(entry => entry.score >= pointsToGradeA) || runScoring[runScoring.length - 1];
+            const closestEntry = runScoring.reduce((closest, entry) => {
+                return Math.abs(entry.score - pointsToGradeA) < Math.abs(closest.score - pointsToGradeA) ? entry : closest;
+            }, runScoring[0]);
+
             const minutes = Math.floor(closestEntry.maxTime / 60);
             const seconds = String(closestEntry.maxTime % 60).padStart(2, "0");
             display.textContent = `Suggested Run Time: ${minutes}.${seconds}`;
