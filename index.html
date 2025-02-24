@@ -276,18 +276,15 @@ const runScoring = [
 
             if (pointsToGradeA <= 0) {
                 pointsToGradeADisplay.textContent = "🎉 Congratulations! You have achieved Grade A! 🎉";
-                display.textContent = "";
+                display.textContent = ""; // Clear suggested run time when Grade A is achieved
                 return;
             }
 
             pointsToGradeADisplay.textContent = `Points needed for Grade A: ${pointsToGradeA}`;
 
-            const closestEntry = runScoring.reduce((closest, entry) => {
-                const diff = entry.score - pointsToGradeA;
-                return diff >= 0 && (!closest || diff < closest.score - pointsToGradeA) ? entry : closest;
-            }, null);
-
-            if (closestEntry) {
+            const validEntries = runScoring.filter(entry => entry.score >= pointsToGradeA);
+            if (validEntries.length > 0) {
+                const closestEntry = validEntries.reduce((closest, entry) => entry.score < closest.score ? entry : closest);
                 const minutes = Math.floor(closestEntry.maxTime / 60);
                 const seconds = String(closestEntry.maxTime % 60).padStart(2, "0");
                 display.textContent = `Suggested Run Time: ${minutes}.${seconds}`;
@@ -300,9 +297,11 @@ const runScoring = [
             const gradeDisplay = document.getElementById("gradeDisplay");
             const runPointsDisplay = document.getElementById("runPointsDisplay");
             const totalPointsDisplay = document.getElementById("totalPointsDisplay");
+            const pointsToGradeADisplay = document.getElementById("pointsToGradeADisplay");
+            const suggestedRunTimeDisplay = document.getElementById("suggestedRunTimeDisplay");
 
             if (!runtime.includes(".")) {
-                gradeDisplay.textContent = runPointsDisplay.textContent = totalPointsDisplay.textContent = "";
+                gradeDisplay.textContent = runPointsDisplay.textContent = totalPointsDisplay.textContent = pointsToGradeADisplay.textContent = suggestedRunTimeDisplay.textContent = "";
                 return;
             }
 
@@ -325,8 +324,14 @@ const runScoring = [
             const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
             if (!category) return gradeDisplay.textContent = "Grade: N/A";
 
-            const grade = totalScore >= category.gradeA ? "A" : totalScore >= category.gradeB ? "B" : totalScore >= category.gradeC ? "C" : "Fail";
-            gradeDisplay.textContent = `Grade: ${grade}`;
+            if (totalScore >= category.gradeA) {
+                gradeDisplay.textContent = "🎉 Grade: A - Excellent Performance! 🎉";
+                pointsToGradeADisplay.textContent = "";
+                suggestedRunTimeDisplay.textContent = ""; // Hide suggested run time when Grade A is achieved
+            } else {
+                const grade = totalScore >= category.gradeB ? "B" : totalScore >= category.gradeC ? "C" : "Fail";
+                gradeDisplay.textContent = `Grade: ${grade}`;
+            }
         }
     </script>
 </body>
