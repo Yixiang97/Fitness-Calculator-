@@ -6,8 +6,8 @@
     <title>Fitness Test Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e2f;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #f0f0f0;
             display: flex;
             justify-content: center;
@@ -16,40 +16,111 @@
             margin: 0;
         }
         .calculator {
-            background-color: #2b2b3d;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            width: 400px;
+            background: rgba(43, 43, 61, 0.9);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            width: 420px;
+            max-width: 90vw;
         }
         h2 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #00bcd4;
+            margin-bottom: 24px;
+            color: #00e5ff;
+            font-size: 1.8em;
         }
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #ffffff;
         }
-        input {
+        input[type="number"], input[type="text"] {
             width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
             background-color: #3a3a4d;
-            color: #f0f0f0;
+            color: #ffffff;
+            font-size: 1em;
             box-sizing: border-box;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
         }
-        .points-display { margin-top: 5px; font-weight: bold; }
-        #gradeDisplay { color: #ff6f61; }
-        #suggestedRunTimeDisplay { color: #4caf50; font-size: 1.1em; }
-        #runPointsDisplay { color: #42a5f5; }
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            background-color: #4a4a5d;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #00e5ff;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        input[type="range"]:hover {
+            background: #00c4e5;
+        }
+        .points-display {
+            margin-top: 6px;
+            font-weight: 500;
+            font-size: 0.95em;
+            color: #b3e5fc;
+        }
+        #gradeDisplay { color: #ff5252; font-weight: bold; }
+        #suggestedRunTimeDisplay { color: #76ff03; font-size: 1.05em; font-style: italic; }
+        #runPointsDisplay { color: #40c4ff; }
         #totalPointsDisplay { color: #ffeb3b; }
         #differenceToGradeADisplay { color: #f06292; }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .calculator {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            input[type="number"], input[type="text"] {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            input[type="range"]::-webkit-slider-thumb {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.2em;
+            }
+            input[type="number"], input[type="text"] {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+            input[type="range"]::-webkit-slider-thumb {
+                width: 14px;
+                height: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -58,16 +129,19 @@
         <div class="input-group">
             <label for="age">Age:</label>
             <input type="number" id="age" placeholder="Enter age">
+            <input type="range" id="ageSlider" min="0" max="100" value="25">
             <div id="ageCategoryDisplay" class="points-display"></div>
         </div>
         <div class="input-group">
             <label for="chinups">Chin-ups (Reps):</label>
             <input type="number" id="chinups" placeholder="Enter chin-up reps">
+            <input type="range" id="chinupsSlider" min="0" max="20" value="10">
             <div id="chinupPointsDisplay" class="points-display"></div>
         </div>
         <div class="input-group">
             <label for="situps">Sit-ups (Reps):</label>
             <input type="number" id="situps" placeholder="Enter sit-up reps">
+            <input type="range" id="situpsSlider" min="0" max="80" value="40">
             <div id="situpPointsDisplay" class="points-display"></div>
         </div>
         <div id="suggestedRunTimeDisplay" class="points-display"></div>
@@ -80,6 +154,123 @@
             <div id="differenceToGradeADisplay" class="points-display"></div>
         </div>
     </div>
+
+    <script>
+        // Sync sliders with inputs
+        const ageInput = document.getElementById("age");
+        const ageSlider = document.getElementById("ageSlider");
+        ageInput.addEventListener("input", () => ageSlider.value = ageInput.value);
+        ageSlider.addEventListener("input", () => ageInput.value = ageSlider.value);
+
+        const chinupsInput = document.getElementById("chinups");
+        const chinupsSlider = document.getElementById("chinupsSlider");
+        chinupsInput.addEventListener("input", () => chinupsSlider.value = chinupsInput.value);
+        chinupsSlider.addEventListener("input", () => chinupsInput.value = chinupsSlider.value);
+
+        const situpsInput = document.getElementById("situps");
+        const situpsSlider = document.getElementById("situpsSlider");
+        situpsInput.addEventListener("input", () => situpsSlider.value = situpsInput.value);
+        situpsSlider.addEventListener("input", () => situpsInput.value = situpsSlider.value);
+
+        // Existing updateAll function
+        document.querySelectorAll("input").forEach(input => input.addEventListener("input", updateAll));
+
+        function updateAll() {
+            const age = +document.getElementById("age").value;
+            const chinups = +document.getElementById("chinups").value;
+            const situps = +document.getElementById("situps").value;
+            const runtime = document.getElementById("runtime").value;
+
+            updateAgeCategory(age);
+            updateChinupPoints(chinups);
+            updateSitupPoints(situps);
+
+            if (!isNaN(chinups) && !isNaN(situps)) {
+                showSuggestedRunTime(age, chinups, situps);
+            } else {
+                document.getElementById("suggestedRunTimeDisplay").textContent = "";
+            }
+
+            if (runtime) {
+                updateRunGrade(age, chinups, situps, runtime);
+            } else {
+                clearRunRelatedDisplays();
+            }
+        }
+
+        function updateAgeCategory(age) {
+            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
+            document.getElementById("ageCategoryDisplay").textContent = category ? `Category: ${category.category}` : "Category: N/A";
+        }
+
+        function updateChinupPoints(chinups) {
+            document.getElementById("chinupPointsDisplay").textContent = chinups >= 0 ? `Chin-up Points: ${chinupScoring[chinups] ?? 0}` : "";
+        }
+
+        function updateSitupPoints(situps) {
+            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
+            document.getElementById("situpPointsDisplay").textContent = situps >= 0 ? `Sit-up Points: ${situpScore}` : "";
+        }
+
+        function showSuggestedRunTime(age, chinups, situps) {
+            const display = document.getElementById("suggestedRunTimeDisplay");
+            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
+            if (!category) return display.textContent = "";
+
+            const chinupScore = chinupScoring[chinups] ?? 0;
+            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
+            const pointsNeeded = category.gradeA - (chinupScore + situpScore);
+
+            display.textContent = pointsNeeded <= 0 
+                ? "🎉 Chin-ups & Sit-ups alone reached Grade A! 🎉" 
+                : `Suggested Run Time For Grade A (Based on Chin-ups & Sit-ups): ${getClosestRunTime(pointsNeeded)} | Points needed: ${pointsNeeded}`;
+        }
+
+        function updateRunGrade(age, chinups, situps, runtime) {
+            const gradeDisplay = document.getElementById("gradeDisplay");
+            const runPointsDisplay = document.getElementById("runPointsDisplay");
+            const totalPointsDisplay = document.getElementById("totalPointsDisplay");
+            const differenceToGradeADisplay = document.getElementById("differenceToGradeADisplay");
+
+            if (!runtime.includes(".")) return clearRunRelatedDisplays();
+
+            const [min, sec] = runtime.split(".").map(Number);
+            if (isNaN(min) || isNaN(sec) || sec > 59) return gradeDisplay.textContent = "Invalid time format.";
+
+            const runScore = (runScoring.find(entry => min * 60 + sec <= entry.maxTime) ?? { score: 0 }).score;
+            const chinupScore = chinupScoring[chinups] ?? 0;
+            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
+            const totalScore = chinupScore + situpScore + runScore;
+            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
+
+            if (!category) return gradeDisplay.textContent = "Grade: N/A";
+
+            const pointsDifference = category.gradeA - totalScore;
+
+            runPointsDisplay.textContent = `Run Points: ${runScore}`;
+            totalPointsDisplay.textContent = `Total Points (With Run): ${totalScore}`;
+            differenceToGradeADisplay.textContent = pointsDifference > 0 
+                ? `Points needed to reach Grade A: ${pointsDifference}` 
+                : "🎉 Achieved Grade A ! 🎉";
+
+            const grade = totalScore >= category.gradeA ? "A" : totalScore >= category.gradeB ? "B" : totalScore >= category.gradeC ? "C" : "Fail";
+            gradeDisplay.textContent = `Grade: ${grade}`;
+        }
+
+        function getClosestRunTime(pointsNeeded) {
+            const entry = runScoring.reduce((prev, curr) => 
+                Math.abs(curr.score - pointsNeeded) < Math.abs(prev.score - pointsNeeded) ? curr : prev);
+            const minutes = Math.floor(entry.maxTime / 60);
+            const seconds = String(entry.maxTime % 60).padStart(2, "0");
+            return `${minutes}.${seconds}`;
+        }
+
+        function clearRunRelatedDisplays() {
+            ["runPointsDisplay", "gradeDisplay", "totalPointsDisplay", "differenceToGradeADisplay"]
+                .forEach(id => document.getElementById(id).textContent = "");
+        }
+    </script>
+</body>
 
     <script>
          const chinupScoring = {
