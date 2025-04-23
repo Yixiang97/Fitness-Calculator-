@@ -3,512 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness Test Calculator</title>
+    <title>Fitness Test App</title>
     <style>
+        /* CSS Styling */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #f0f0f0;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
-        .calculator {
-            background: rgba(43, 43, 61, 0.9);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-            width: 420px;
-            max-width: 90vw;
-        }
-        h2 {
+
+        .main-container {
             text-align: center;
-            margin-bottom: 24px;
-            color: #00e5ff;
-            font-size: 1.8em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
-        .input-group {
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2em;
             margin-bottom: 20px;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-        input[type="number"], input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            background-color: #3a3a4d;
-            color: #ffffff;
-            font-size: 0.95em;
-            box-sizing: border-box;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-        }
-        input[type="number"]:focus, input[type="text"]:focus {
-            outline: none;
-            background-color: #4a4a5d;
-            box-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .slider-btn {
-            background-color: #00e5ff;
-            color: #ffffff;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
+
+        .button-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
+            gap: 20px;
         }
-        .slider-btn:hover {
-            background-color: #00c4e5;
-        }
-        input[type="range"] {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: #00e5ff;
+
+        .gender-button {
+            text-decoration: none;
+            color: #fff;
+            background: #007bff;
+            padding: 10px 20px;
             border-radius: 5px;
-            outline: none;
+            font-size: 1em;
             transition: background 0.3s ease;
         }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+        .gender-button:hover {
+            background: #0056b3;
         }
-        input[type="range"]:hover {
-            background: #00c4e5;
-        }
-        .points-display {
-            margin-top: 6px;
-            font-weight: 500;
-            font-size: 0.95em;
-            color: #b3e5fc;
-        }
-        #gradeDisplay { color: #ff5252; font-weight: bold; }
-        #suggestedRunTimeDisplay { color: #76ff03; font-size: 1.05em; font-style: italic; }
-        #runPointsDisplay { color: #40c4ff; }
-        #totalPointsDisplay { color: #ffeb3b; }
-        #differenceToGradeADisplay { color: #f06292; }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h2>Fitness Test Calculator</h2>
-        <div class="input-group">
-            <label for="age">Age:</label>
-            <div class="slider-container">
-                <button type="button" class="slider-btn" id="ageMinus">-</button>
-                <input type="range" id="ageSlider" min="0" max="100" value="25">
-                <button type="button" class="slider-btn" id="agePlus">+</button>
-            </div>
-            <input type="number" id="age" placeholder="Enter age">
-            <div id="ageCategoryDisplay" class="points-display"></div>
-        </div>
-        <div class="input-group">
-            <label for="chinups">Chin-ups (Reps):</label>
-            <div class="slider-container">
-                <button type="button" class="slider-btn" id="chinupsMinus">-</button>
-                <input type="range" id="chinupsSlider" min="0" max="20" value="10">
-                <button type="button" class="slider-btn" id="chinupsPlus">+</button>
-            </div>
-            <input type="number" id="chinups" placeholder="Enter chin-up reps">
-            <div id="chinupPointsDisplay" class="points-display"></div>
-        </div>
-        <div class="input-group">
-            <label for="situps">Sit-ups (Reps):</label>
-            <div class="slider-container">
-                <button type="button" class="slider-btn" id="situpsMinus">-</button>
-                <input type="range" id="situpsSlider" min="0" max="80" value="40">
-                <button type="button" class="slider-btn" id="situpsPlus">+</button>
-            </div>
-            <input type="number" id="situps" placeholder="Enter sit-up reps">
-            <div id="situpPointsDisplay" class="points-display"></div>
-        </div>
-        <div class="input-group">
-            <label for="runtime">3.2km Run Time (MM.SS):</label>
-            <div class="slider-container">
-                <button type="button" class="slider-btn" id="runtimeMinus">-</button>
-                <input type="range" id="runtimeSlider" min="840" max="1440" value="1080">
-                <button type="button" class="slider-btn" id="runtimePlus">+</button>
-            </div>
-            <input type="text" id="runtime" placeholder="e.g., 18.30">
-            <div id="runPointsDisplay" class="points-display"></div>
-            <div id="suggestedRunTimeDisplay" class="points-display"></div>
-            <div id="gradeDisplay" class="points-display"></div>
-            <div id="totalPointsDisplay" class="points-display"></div>
-            <div id="differenceToGradeADisplay" class="points-display"></div>
+    <div class="main-container">
+        <h1>Welcome to the Fitness Test App</h1>
+        <p>Select your gender to proceed:</p>
+        <div class="button-container">
+            <button class="gender-button" id="maleButton">Male</button>
+            <button class="gender-button" id="femaleButton">Female</button>
         </div>
     </div>
 
     <script>
-        // Sync sliders with inputs
-        const ageInput = document.getElementById("age");
-        const ageSlider = document.getElementById("ageSlider");
-        const ageMinus = document.getElementById("ageMinus");
-        const agePlus = document.getElementById("agePlus");
-
-        ageInput.addEventListener("input", () => ageSlider.value = ageInput.value);
-        ageSlider.addEventListener("input", () => ageInput.value = ageSlider.value);
-        ageMinus.addEventListener("click", () => {
-            ageSlider.value = Math.max(+ageSlider.value - 1, +ageSlider.min);
-            ageInput.value = ageSlider.value;
-        });
-        agePlus.addEventListener("click", () => {
-            ageSlider.value = Math.min(+ageSlider.value + 1, +ageSlider.max);
-            ageInput.value = ageSlider.value;
+        // JavaScript for navigation
+        document.getElementById('maleButton').addEventListener('click', () => {
+            window.location.href = 'male.html'; // Redirect to male calculator
         });
 
-        const chinupsInput = document.getElementById("chinups");
-        const chinupsSlider = document.getElementById("chinupsSlider");
-        const chinupsMinus = document.getElementById("chinupsMinus");
-        const chinupsPlus = document.getElementById("chinupsPlus");
-
-        chinupsInput.addEventListener("input", () => chinupsSlider.value = chinupsInput.value);
-        chinupsSlider.addEventListener("input", () => chinupsInput.value = chinupsSlider.value);
-        chinupsMinus.addEventListener("click", () => {
-            chinupsSlider.value = Math.max(+chinupsSlider.value - 1, +chinupsSlider.min);
-            chinupsInput.value = chinupsSlider.value;
+        document.getElementById('femaleButton').addEventListener('click', () => {
+            window.location.href = 'female.html'; // Redirect to female calculator
         });
-        chinupsPlus.addEventListener("click", () => {
-            chinupsSlider.value = Math.min(+chinupsSlider.value + 1, +chinupsSlider.max);
-            chinupsInput.value = chinupsSlider.value;
-        });
-
-        const situpsInput = document.getElementById("situps");
-        const situpsSlider = document.getElementById("situpsSlider");
-        const situpsMinus = document.getElementById("situpsMinus");
-        const situpsPlus = document.getElementById("situpsPlus");
-
-        situpsInput.addEventListener("input", () => situpsSlider.value = situpsInput.value);
-        situpsSlider.addEventListener("input", () => situpsInput.value = situpsSlider.value);
-        situpsMinus.addEventListener("click", () => {
-            situpsSlider.value = Math.max(+situpsSlider.value - 1, +situpsSlider.min);
-            situpsInput.value = situpsSlider.value;
-        });
-        situpsPlus.addEventListener("click", () => {
-            situpsSlider.value = Math.min(+situpsSlider.value + 1, +situpsSlider.max);
-            situpsInput.value = situpsSlider.value;
-        });
-
-        const runtimeInput = document.getElementById("runtime");
-        const runtimeSlider = document.getElementById("runtimeSlider");
-        const runtimeMinus = document.getElementById("runtimeMinus");
-        const runtimePlus = document.getElementById("runtimePlus");
-
-        runtimeInput.addEventListener("input", () => {
-            const [min, sec] = runtimeInput.value.split(".").map(Number);
-            runtimeSlider.value = min * 60 + (sec || 0);
-        });
-
-        runtimeSlider.addEventListener("input", () => {
-            const minutes = Math.floor(runtimeSlider.value / 60);
-            const seconds = String(runtimeSlider.value % 60).padStart(2, "0");
-            runtimeInput.value = `${minutes}.${seconds}`;
-        });
-
-        runtimeMinus.addEventListener("click", () => {
-            runtimeSlider.value = Math.max(+runtimeSlider.value - 1, +runtimeSlider.min);
-            runtimeSlider.dispatchEvent(new Event("input"));
-        });
-
-        runtimePlus.addEventListener("click", () => {
-            runtimeSlider.value = Math.min(+runtimeSlider.value + 1, +runtimeSlider.max);
-            runtimeSlider.dispatchEvent(new Event("input"));
-        });
-
-        // Function to show suggested run time
-        function showSuggestedRunTime(age, chinups, situps) {
-            const display = document.getElementById("suggestedRunTimeDisplay");
-            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
-            if (!category) return display.textContent = "";
-
-            const chinupScore = chinupScoring[chinups] ?? 0;
-            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
-            const pointsNeeded = category.gradeA - (chinupScore + situpScore);
-
-            display.textContent = pointsNeeded <= 0 
-                ? "🎉 Chin-ups & Sit-ups alone reached Grade A! 🎉" 
-                : `Suggested Run Time For Grade A: ${getClosestRunTime(pointsNeeded)} | Points needed: ${pointsNeeded}`;
-        }
-
-        function getClosestRunTime(pointsNeeded) {
-            const entry = runScoring.reduce((prev, curr) => 
-                Math.abs(curr.score - pointsNeeded) < Math.abs(prev.score - pointsNeeded) ? curr : prev);
-            const minutes = Math.floor(entry.maxTime / 60);
-            const seconds = String(entry.maxTime % 60).padStart(2, "0");
-            return `${minutes}.${seconds}`;
-        }
-    </script>
-</body>
-
-    <script>
-         const chinupScoring = {
-    20: 100, 19: 95, 18: 90, 17: 85, 16: 80, 15: 75, 14: 70, 13: 65, 12: 60,
-    11: 55, 10: 50, 9: 45, 8: 40, 7: 35, 6: 30, 5: 25, 4: 20, 3: 15, 2: 10, 1: 5, 0: 0
-};
-
-   const situpScoring = [
-    { reps: 80, score: 100 }, { reps: 79, score: 98 }, { reps: 78, score: 96 },
-    { reps: 77, score: 94 }, { reps: 76, score: 92 }, { reps: 75, score: 90 },
-    { reps: 74, score: 88 }, { reps: 73, score: 86 }, { reps: 72, score: 84 },
-    { reps: 71, score: 82 }, { reps: 70, score: 80 }, { reps: 69, score: 78 },
-    { reps: 68, score: 76 }, { reps: 67, score: 74 }, { reps: 66, score: 72 },
-    { reps: 65, score: 70 }, { reps: 64, score: 68 }, { reps: 63, score: 66 },
-    { reps: 62, score: 64 }, { reps: 61, score: 62 }, { reps: 60, score: 60 },
-    { reps: 59, score: 59 }, { reps: 58, score: 58 }, { reps: 57, score: 57 },
-    { reps: 56, score: 56 }, { reps: 55, score: 55 }, { reps: 54, score: 54 },
-    { reps: 53, score: 53 }, { reps: 52, score: 52 }, { reps: 51, score: 51 },
-    { reps: 50, score: 50 }, { reps: 49, score: 49 }, { reps: 48, score: 48 },
-    { reps: 47, score: 47 }, { reps: 46, score: 46 }, { reps: 45, score: 45 },
-    { reps: 44, score: 44 }, { reps: 43, score: 43 }, { reps: 42, score: 42 },
-    { reps: 41, score: 41 }, { reps: 40, score: 40 }, { reps: 39, score: 39 },
-    { reps: 38, score: 38 }, { reps: 37, score: 37 }, { reps: 36, score: 36 },
-    { reps: 35, score: 35 }, { reps: 34, score: 34 }, { reps: 33, score: 33 },
-    { reps: 32, score: 32 }, { reps: 31, score: 31 }, { reps: 30, score: 30 },
-    { reps: 29, score: 29 }, { reps: 28, score: 28 }, { reps: 27, score: 27 },
-    { reps: 26, score: 26 }, { reps: 25, score: 25 }, { reps: 24, score: 24 },
-    { reps: 23, score: 23 }, { reps: 22, score: 22 }, { reps: 21, score: 21 },
-    { reps: 20, score: 20 }, { reps: 19, score: 19 }, { reps: 18, score: 18 },
-    { reps: 17, score: 17 }, { reps: 16, score: 16 }, { reps: 15, score: 15 },
-    { reps: 14, score: 14 }, { reps: 13, score: 13 }, { reps: 12, score: 12 },
-    { reps: 11, score: 11 }, { reps: 10, score: 10 }, { reps: 9, score: 9 },
-    { reps: 8, score: 8 }, { reps: 7, score: 7 }, { reps: 6, score: 6 },
-    { reps: 5, score: 5 }, { reps: 4, score: 4 }, { reps: 3, score: 3 },
-    { reps: 2, score: 2 }, { reps: 1, score: 1 }, { reps: 0, score: 0 }
-  
-];
-
-        const ageCategories = [
-    { minAge: 0, maxAge: 24, gradeA: 250 ,gradeB:230, gradeC:220,category: "X"},
-    { minAge: 25, maxAge: 29, gradeA: 240,gradeB:220,gradeC:210,category: "Y" },
-    { minAge: 30, maxAge: 34, gradeA: 230,gradeB:210,gradeC:200,category: "Y1" },
-    { minAge: 35, maxAge: 39, gradeA: 210,gradeB:190,gradeC:180,category: "Z" },
-    { minAge: 40, maxAge: 44, gradeA: 200,gradeB:180,gradeC:170,category: "Z1" },
-    { minAge: 45, maxAge: 49, gradeA: 180,gradeB:160,gradeC:150,category: "V" },
-    { minAge: 50, maxAge: 100, gradeA: 170,gradeB:150,gradeC:140,category: "V1" }
-];
-      // Run scoring data
-const runScoring = [
-    { maxTime: 14 * 60 + 0, score: 100 },
-    { maxTime: 14 * 60 + 6, score: 99 },
-    { maxTime: 14 * 60 + 12, score: 98 },
-    { maxTime: 14 * 60 + 18, score: 97 },
-    { maxTime: 14 * 60 + 24, score: 96 },
-    { maxTime: 14 * 60 + 30, score: 95 },
-    { maxTime: 14 * 60 + 36, score: 94 },
-    { maxTime: 14 * 60 + 42, score: 93 },
-    { maxTime: 14 * 60 + 48, score: 92 },
-    { maxTime: 14 * 60 + 54, score: 91 },
-    { maxTime: 15 * 60 + 0, score: 90 },
-    { maxTime: 15 * 60 + 6, score: 89 },
-    { maxTime: 15 * 60 + 12, score: 88 },
-    { maxTime: 15 * 60 + 18, score: 87 },
-    { maxTime: 15 * 60 + 24, score: 86 },
-    { maxTime: 15 * 60 + 30, score: 85 },
-    { maxTime: 15 * 60 + 36, score: 84 },
-    { maxTime: 15 * 60 + 42, score: 83 },
-    { maxTime: 15 * 60 + 48, score: 82 },
-    { maxTime: 15 * 60 + 54, score: 81 },
-    { maxTime: 16 * 60 + 0, score: 80 },
-    { maxTime: 16 * 60 + 6, score: 79 },
-    { maxTime: 16 * 60 + 12, score: 78 },
-    { maxTime: 16 * 60 + 18, score: 77 },
-    { maxTime: 16 * 60 + 24, score: 76 },
-    { maxTime: 16 * 60 + 30, score: 75 },
-    { maxTime: 16 * 60 + 36, score: 74 },
-    { maxTime: 16 * 60 + 42, score: 73 },
-    { maxTime: 16 * 60 + 48, score: 72 },
-    { maxTime: 16 * 60 + 54, score: 71 },
-    { maxTime: 17 * 60 + 0, score: 70 },
-    { maxTime: 17 * 60 + 6, score: 69 },
-    { maxTime: 17 * 60 + 12, score: 68 },
-    { maxTime: 17 * 60 + 18, score: 67 },
-    { maxTime: 17 * 60 + 24, score: 66 },
-    { maxTime: 17 * 60 + 30, score: 65 },
-    { maxTime: 17 * 60 + 36, score: 64 },
-    { maxTime: 17 * 60 + 42, score: 63 },
-    { maxTime: 17 * 60 + 48, score: 62 },
-    { maxTime: 17 * 60 + 54, score: 61 },
-    { maxTime: 18 * 60 + 0, score: 60 },
-    { maxTime: 18 * 60 + 6, score: 59 },
-    { maxTime: 18 * 60 + 12, score: 58 },
-    { maxTime: 18 * 60 + 18, score: 57 },
-    { maxTime: 18 * 60 + 24, score: 56 },
-    { maxTime: 18 * 60 + 30, score: 55 },
-    { maxTime: 18 * 60 + 36, score: 54 },
-    { maxTime: 18 * 60 + 42, score: 53 },
-    { maxTime: 18 * 60 + 48, score: 52 },
-    { maxTime: 18 * 60 + 54, score: 51 },
-    { maxTime: 19 * 60 + 0, score: 50 },
-    { maxTime: 19 * 60 + 6, score: 49 },
-    { maxTime: 19 * 60 + 12, score: 48 },
-    { maxTime: 19 * 60 + 18, score: 47 },
-    { maxTime: 19 * 60 + 24, score: 46 },
-    { maxTime: 19 * 60 + 30, score: 45 },
-    { maxTime: 19 * 60 + 36, score: 44 },
-    { maxTime: 19 * 60 + 42, score: 43 },
-    { maxTime: 19 * 60 + 48, score: 42 },
-    { maxTime: 19 * 60 + 54, score: 41 },
-    { maxTime: 20 * 60 + 0, score: 40 },
-    { maxTime: 20 * 60 + 6, score: 39 },
-    { maxTime: 20 * 60 + 12, score: 38 },
-    { maxTime: 20 * 60 + 18, score: 37 },
-    { maxTime: 20 * 60 + 24, score: 36 },
-    { maxTime: 20 * 60 + 30, score: 35 },
-    { maxTime: 20 * 60 + 36, score: 34 },
-    { maxTime: 20 * 60 + 42, score: 33 },
-    { maxTime: 20 * 60 + 48, score: 32 },
-    { maxTime: 20 * 60 + 54, score: 31 },
-    { maxTime: 21 * 60 + 0, score: 30 },
-    { maxTime: 21 * 60 + 6, score: 29 },
-    { maxTime: 21 * 60 + 12, score: 28 },
-    { maxTime: 21 * 60 + 18, score: 27 },
-    { maxTime: 21 * 60 + 24, score: 26 },
-    { maxTime: 21 * 60 + 30, score: 25 },
-    { maxTime: 21 * 60 + 36, score: 24 },
-    { maxTime: 21 * 60 + 42, score: 23 },
-    { maxTime: 21 * 60 + 48, score: 22 },
-    { maxTime: 21 * 60 + 54, score: 21 },
-    { maxTime: 22 * 60 + 0, score: 20 },
-    { maxTime: 22 * 60 + 6, score: 19 },
-    { maxTime: 22 * 60 + 12, score: 18 },
-    { maxTime: 22 * 60 + 18, score: 17 },
-    { maxTime: 22 * 60 + 24, score: 16 },
-    { maxTime: 22 * 60 + 30, score: 15 },
-    { maxTime: 22 * 60 + 36, score: 14 },
-    { maxTime: 22 * 60 + 42, score: 13 },
-    { maxTime: 22 * 60 + 48, score: 12 },
-    { maxTime: 22 * 60 + 54, score: 11 },
-    { maxTime: 23 * 60 + 0, score: 10 },
-    { maxTime: 23 * 60 + 6, score: 9 },
-    { maxTime: 23 * 60 + 12, score: 8 },
-    { maxTime: 23 * 60 + 18, score: 7 },
-    { maxTime: 23 * 60 + 24, score: 6 },
-    { maxTime: 23 * 60 + 30, score: 5 },
-    { maxTime: 23 * 60 + 36, score: 4 },
-    { maxTime: 23 * 60 + 42, score: 3 },
-    { maxTime: 23 * 60 + 48, score: 2 },
-    { maxTime: 23 * 60 + 54, score: 1 },
-];
-        document.querySelectorAll("input").forEach(input => input.addEventListener("input", updateAll));
-
-        function updateAll() {
-            const age = +document.getElementById("age").value;
-            const chinups = +document.getElementById("chinups").value;
-            const situps = +document.getElementById("situps").value;
-            const runtime = document.getElementById("runtime").value;
-
-            updateAgeCategory(age);
-            updateChinupPoints(chinups);
-            updateSitupPoints(situps);
-
-            if (!isNaN(chinups) && !isNaN(situps)) {
-                showSuggestedRunTime(age, chinups, situps);
-            } else {
-                document.getElementById("suggestedRunTimeDisplay").textContent = "";
-            }
-
-            if (runtime) {
-                updateRunGrade(age, chinups, situps, runtime);
-            } else {
-                clearRunRelatedDisplays();
-            }
-        }
-
-        function updateAgeCategory(age) {
-            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
-            document.getElementById("ageCategoryDisplay").textContent = category ? `Category: ${category.category}` : "Category: N/A";
-        }
-
-        function updateChinupPoints(chinups) {
-            document.getElementById("chinupPointsDisplay").textContent = chinups >= 0 ? `Chin-up Points: ${chinupScoring[chinups] ?? 0}` : "";
-        }
-
-        function updateSitupPoints(situps) {
-            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
-            document.getElementById("situpPointsDisplay").textContent = situps >= 0 ? `Sit-up Points: ${situpScore}` : "";
-        }
-
-        function showSuggestedRunTime(age, chinups, situps) {
-            const display = document.getElementById("suggestedRunTimeDisplay");
-            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
-            if (!category) return display.textContent = "";
-
-            const chinupScore = chinupScoring[chinups] ?? 0;
-            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
-            const pointsNeeded = category.gradeA - (chinupScore + situpScore);
-
-            display.textContent = pointsNeeded <= 0 
-                ? "🎉 Chin-ups & Sit-ups alone reached Grade A! 🎉" 
-                : `Suggested Run Time For Grade A (Based on Chin-ups & Sit-ups): ${getClosestRunTime(pointsNeeded)} | Points needed: ${pointsNeeded}`;
-        }
-
-        function updateRunGrade(age, chinups, situps, runtime) {
-            const gradeDisplay = document.getElementById("gradeDisplay");
-            const runPointsDisplay = document.getElementById("runPointsDisplay");
-            const totalPointsDisplay = document.getElementById("totalPointsDisplay");
-            const differenceToGradeADisplay = document.getElementById("differenceToGradeADisplay");
-
-            if (!runtime.includes(".")) return clearRunRelatedDisplays();
-
-            const [min, sec] = runtime.split(".").map(Number);
-            if (isNaN(min) || isNaN(sec) || sec > 59) return gradeDisplay.textContent = "Invalid time format.";
-
-            const runScore = (runScoring.find(entry => min * 60 + sec <= entry.maxTime) ?? { score: 0 }).score;
-            const chinupScore = chinupScoring[chinups] ?? 0;
-            const situpScore = situpScoring.find(s => situps >= s.reps)?.score ?? 0;
-            const totalScore = chinupScore + situpScore + runScore;
-            const category = ageCategories.find(cat => age >= cat.minAge && age <= cat.maxAge);
-
-            if (!category) return gradeDisplay.textContent = "Grade: N/A";
-
-            const pointsDifference = category.gradeA - totalScore;
-
-            runPointsDisplay.textContent = `Run Points: ${runScore}`;
-            totalPointsDisplay.textContent = `Total Points (With Run): ${totalScore}`;
-            differenceToGradeADisplay.textContent = pointsDifference > 0 
-                ? `Points needed to reach Grade A: ${pointsDifference}` 
-                : "🎉 Achieved Grade A ! 🎉";
-
-            const grade = totalScore >= category.gradeA ? "A" : totalScore >= category.gradeB ? "B" : totalScore >= category.gradeC ? "C" : "Fail";
-            gradeDisplay.textContent = `Grade: ${grade}`;
-        }
-
-        function getClosestRunTime(pointsNeeded) {
-            const entry = runScoring.reduce((prev, curr) => 
-                Math.abs(curr.score - pointsNeeded) < Math.abs(prev.score - pointsNeeded) ? curr : prev);
-            const minutes = Math.floor(entry.maxTime / 60);
-            const seconds = String(entry.maxTime % 60).padStart(2, "0");
-            return `${minutes}.${seconds}`;
-        }
-
-        function clearRunRelatedDisplays() {
-            ["runPointsDisplay", "gradeDisplay", "totalPointsDisplay", "differenceToGradeADisplay"]
-                .forEach(id => document.getElementById(id).textContent = "");
-        }
     </script>
 </body>
 </html>
