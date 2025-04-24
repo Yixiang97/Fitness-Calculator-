@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title>Fitness Test Calculator</title>
     <style>
         body {
@@ -20,9 +20,35 @@
             padding: 30px;
             border-radius: 16px;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-            width: 420px;
-            max-width: 90vw;
+            width: 90%;
+            max-width: 420px;
         }
+       @media (max-width: 480px) {
+    .calculator {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    input[type="number"], input[type="text"] {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    label {
+        font-size: 0.9em;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    .slider-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 1em;
+    }
+}
+
         h2 {
             text-align: center;
             margin-bottom: 24px;
